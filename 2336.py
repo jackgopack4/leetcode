@@ -8,39 +8,33 @@
 # void addBack(int num) Adds a positive integer num back into the infinite set, if it is not already in the infinite set.
 
 class SmallestInfiniteSet(object):
-    # One-hot vector implementation for removed items that grows only when items are removed
+    # faster version using a hashset and heap combo; only add when adding back below current minimum
     def __init__(self):
-        self.removed = []
+        self.addedList = []
+        self.addedSet = set()
         self.smallest = 1
 
     def popSmallest(self):
         """
         :rtype: int
         """
-        res = self.smallest
-        if len(self.removed) < res:
-            self.removed.append(True)
+        if len(self.addedList) == 0:
+            res = self.smallest
+            self.smallest +=1
         else:
-            self.removed[res-1] = True
-        i = res
-        while i < len(self.removed):
-            if not self.removed[i]:
-                break
-            i+=1
-        self.smallest=i+1
+            res = heapq.heappop(self.addedList)
+            self.addedSet.remove(res)
         return res
-        
 
     def addBack(self, num):
         """
         :type num: int
         :rtype: None
         """
-        if num <= len(self.removed):
-            if self.removed[num-1]:
-                self.removed[num-1] = False
-                if num < self.smallest:
-                    self.smallest = num
+        if num < self.smallest and num not in self.addedSet:
+            heapq.heappush(self.addedList,num)
+            self.addedSet.add(num)
+        
         
         
 
