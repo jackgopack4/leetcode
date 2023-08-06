@@ -1,4 +1,4 @@
-# 135. Candy (this solution doesn't work but saving my work)
+# 135. Candy (accepted solution but slow)
 class ListNode(object):
     def __init__(self, rating=0, candy=1, right=None, left=None):
         self.rating = rating
@@ -8,6 +8,7 @@ class ListNode(object):
 class Solution(object):
     def __init__(self):
         self.head = ListNode()
+        self.tail = ListNode()
     def candy(self, ratings):
         """
         :type ratings: List[int]
@@ -23,6 +24,7 @@ class Solution(object):
             prev = cur
             cur = cur.right
             cur.left = prev
+        self.tail = cur
         cur = self.head
         while cur != None:
             # if ranking lower than left, must have less than left
@@ -41,6 +43,19 @@ class Solution(object):
                 if cur.right.rating > cur.rating and cur.right.candy <= cur.candy:
                     cur.right.candy=cur.candy+1
             cur = cur.right
+        cur = self.tail
+        while cur != None:
+            if cur.left != None:
+                if cur.left.rating < cur.rating and cur.candy <= cur.left.candy:
+                    cur.candy = cur.left.candy+1
+                if cur.left.rating > cur.rating and cur.left.candy <= cur.candy:
+                    cur.left.candy=cur.candy+1
+            if cur.right != None:
+                if cur.right.rating < cur.rating and cur.candy <= cur.right.candy:
+                    cur.candy = cur.right.candy+1
+                if cur.right.rating > cur.rating and cur.right.candy <= cur.candy:
+                    cur.right.candy=cur.candy+1
+            cur = cur.left
         cur = self.head
         candies = 0
         while cur != None:
