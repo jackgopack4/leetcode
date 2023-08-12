@@ -1,8 +1,7 @@
-# bottom-up DP approach
+# bottom-up DP approach, list based
 class Solution:
     def climbStairs(self, n: int) -> int:
-        hashmap = {1:1,2:2}
-        for i in range(3,n+1):
-            hashmap.update({i:(hashmap[i-1]+hashmap[i-2])})
-            hashmap.pop(i-2)
-        return hashmap[n]
+        list = [1,2]
+        for i in range(2,n):
+            list.append(list[i-1]+list[i-2])
+        return list[n-1]
