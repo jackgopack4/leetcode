@@ -5,23 +5,8 @@
 #         self.left = left
 #         self.right = right
 class Solution:
-    def __init__(self):
-        self.highest = -10001
-        self.leaf_count = 0
-        self.visited = {}
-    def goodNodes(self, root: TreeNode) -> int:
-        def preOrderTraversal(node):
-            cur = node
-            if cur:
-                self.visited[cur]=self.highest
-                if cur.val >= self.highest:
-                    self.leaf_count += 1
-                    self.highest = cur.val
-                preOrderTraversal(cur.left)
-                preOrderTraversal(cur.right)
-                self.highest = self.visited.pop(cur)
-        self.visited.clear()
-        self.highest = root.val
-        self.leaf_count = 0
-        preOrderTraversal(root)
-        return self.leaf_count
+    def goodNodes(self,root,highest=-10000):
+        if root:
+            return self.goodNodes(root.left, max(highest,root.val)) + self.goodNodes(root.right,max(highest,root.val))+ (root.val >= highest)
+        else:
+            return 0
