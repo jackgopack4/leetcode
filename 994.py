@@ -1,4 +1,3 @@
-# NOT WORKING YET. NEED TO IMPLEMENT LOOP THROUGH TO CHECK ORANGES
 from collections import deque
 class Solution:
     def orangesRotting(self, grid: List[List[int]]) -> int:
@@ -18,7 +17,7 @@ class Solution:
             if y > 0 and grid[y-1][x] == 1:
                 res.append((x,y-1))
             if y < len(grid)-1 and grid[y+1][x] == 1:
-                res.append(x,y+1)
+                res.append((x,y+1))
             return res
         fresh_start = countOranges(grid,FRESH)
         if fresh_start == 0:
@@ -32,7 +31,21 @@ class Solution:
                 if grid[j][i] == 2:
                     self.rotten.add((i,j))
         q = deque()
-        
-        while q:
-            cur = q.popleft()
-        return 0
+        q.extend((r,0) for r in self.rotten)
+        t = 0
+        while q and len(self.rotten)<fresh_start+rotten_start:
+            cur_oranges = []
+            while q and q[0][1] == t:
+                cur_oranges.append(q.popleft())
+            t += 1
+            for tmp, time in cur_oranges:
+                next_oranges = freshNext(grid,tmp[0],tmp[1])
+                for n in next_oranges:
+                    if n not in self.rotten:
+                        self.rotten.add(n)
+                        q.append((n,time+1))
+                
+
+        if len(self.rotten)<fresh_start+rotten_start:
+            return -1
+        return t
