@@ -8,7 +8,5 @@ class Solution(object):
         :type s: List[str]
         :rtype: None Do not return anything, modify s in-place instead.
         """
-        max = (len(s)) // 2
-        for i in range(max):
-            s[i],s[len(s)-1-i] = s[len(s)-1-i],s[i]
+        s.reverse()
         return s
