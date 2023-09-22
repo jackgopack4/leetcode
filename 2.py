@@ -1,43 +1,41 @@
-# Leetcode medium
 # Definition for singly-linked list.
 # class ListNode:
 #     def __init__(self, val=0, next=None):
 #         self.val = val
 #         self.next = next
 class Solution:
-    def overflowAdder(self, cur1: int, num2: int,overflow:int = 0) -> int:
-        tmp = cur1.val+num2+overflow
-        if tmp>9:
-            cur1.val = tmp-10
-            return 1
-        else:
-            cur1.val = tmp
-            return 0
-        
     def addTwoNumbers(self, l1: Optional[ListNode], l2: Optional[ListNode]) -> Optional[ListNode]:
-        cur1 = l1
-        cur2 = l2
-        overflow = 0
-        while cur1 != None or cur2 != None:
-            print('overflow =  %d' % overflow)
-            if cur1 != None and cur2 != None:
-                prev1 = cur1
-                prev2 = cur2
-                overflow = self.overflowAdder(cur1,cur2.val,overflow)
-                cur1 = cur1.next
-                cur2 = cur2.next
-            elif cur1 != None:
-                prev1 = cur1
-                overflow = self.overflowAdder(cur1,0,overflow)
-                cur1 = cur1.next
-            else: # cur1 None but cur2 valid
-                prev2 = cur2
-                prev1.next = ListNode()
-                cur1 = prev1.next
-                prev1 = cur1
-                overflow = self.overflowAdder(cur1,cur2.val,overflow)
-                cur1 = cur1.next
-                cur2 = cur2.next
-        if overflow == 1:
-            prev1.next = ListNode(val=1)
-        return l1
+        def addTwoDigits(overflow_in:bool,n1:int,n2:int) ->(int,bool):
+            tmp = n1 + n2
+            if overflow_in:
+                tmp += 1
+            if tmp >= 10:
+                return (tmp-10,True)
+            else:
+                return (tmp,False)
+        ret_val, overflow = addTwoDigits(False,l1.val,l2.val)
+        l1 = l1.next
+        l2 = l2.next
+        ret = ListNode(ret_val)
+        cur = ret
+        while l1 and l2:
+            nex_val, overflow = addTwoDigits(overflow,l1.val,l2.val)
+            cur.next = ListNode(nex_val)
+            cur = cur.next
+            l1 = l1.next
+            l2 = l2.next
+        if l1:
+            tmp = l1
+        elif l2:
+            tmp = l2
+        else:
+            tmp = None
+        while tmp:
+            nex_val, overflow = addTwoDigits(overflow,tmp.val,0)
+            cur.next = ListNode(nex_val)
+            cur = cur.next
+            tmp = tmp.next
+        if overflow:
+            cur.next = ListNode(1)
+            overflow = False
+        return ret
