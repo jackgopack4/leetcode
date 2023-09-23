@@ -1,4 +1,4 @@
-// https://leetcode.com/problems/binary-tree-level-order-traversal
+# https://leetcode.com/problems/binary-tree-level-order-traversal
 
 # Definition for a binary tree node.
 # class TreeNode:
@@ -9,24 +9,18 @@
 from collections import deque
 class Solution:
     def levelOrder(self, root: Optional[TreeNode]) -> List[List[int]]:
-        queue = deque()
+        q = deque()
         res = []
-        queue.append((root,0))
-        level = 0
-        while queue:
-            cur, level = queue.popleft()
-            if cur:
-                if len(res) > level:
-                    res[level].append(cur.val)
-                else:
-                    res.append([cur.val])
-
-                if cur.left:
-                    queue.append((cur.left,level+1))
-                if cur.right:
-                    queue.append((cur.right, level+1))
+        if root:
+            q.append((root,1))
+        while q:
+            cur, lvl = q.popleft()
+            if lvl > len(res):
+                res.append([cur.val])
+            else:
+                res[-1].append(cur.val)
+            if cur.left:
+                q.append((cur.left,lvl+1))
+            if cur.right:
+                q.append((cur.right,lvl+1))
         return res
-                
-                
-            
-            
