@@ -1,14 +1,12 @@
-// https://leetcode.com/problems/best-time-to-buy-and-sell-stock
+# https://leetcode.com/problems/best-time-to-buy-and-sell-stock
 
 class Solution:
     def maxProfit(self, prices: List[int]) -> int:
-        lp, rp, max_profit = 0, 1, 0
-        while rp < len(prices):
-            if prices[rp] > prices[lp]:
-                if prices[rp]-prices[lp] > max_profit:
-                    max_profit = prices[rp]-prices[lp]
-                rp += 1
-            else:
-                lp = rp
-                rp += 1
-        return max_profit
+        maxProfit = 0
+        prev = float('inf')
+        for p in prices:
+            if p < prev:
+                prev = p
+            elif p - prev > maxProfit:
+                maxProfit = p - prev
+        return maxProfit
