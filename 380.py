@@ -1,29 +1,33 @@
-# 380. Valid Anagram
-class Solution(object):
-    def isAnagram(self, s, t):
-        """
-        :type s: str
-        :type t: str
-        :rtype: bool
-        """
-        sDict = {}
-        tDict = {}
-        if len(s) != len(t):
-            return False
-        for x in s:
-            if x not in sDict:
-                sDict[x] = 0
-            else:
-                sDict[x] = sDict[x]+1
-        for x in t:
-            if x not in sDict:
-                return False
-            else:
-                if x not in tDict:
-                    tDict[x] = 0
-                else:
-                    tDict[x] = tDict[x]+1
-                if tDict[x] > sDict[x]:
-                    return False
-        return True
-        
+from random import randrange
+class RandomizedSet:
+
+    def __init__(self):
+        self.data = {}
+        self.keys = []
+
+    def insert(self, val: int) -> bool:
+        if val not in self.data:
+            self.keys.append(val)
+            self.data[val] = len(self.keys)-1
+            return True
+        return False
+
+    def remove(self, val: int) -> bool:
+        if val in self.data:
+            last_element, idx = self.keys[-1],self.data[val]
+            self.keys[idx],self.data[last_element] = last_element,idx
+            self.keys.pop()
+            del self.data[val]
+            return True
+        return False
+
+    def getRandom(self) -> int:
+        size = len(self.keys)
+        return self.keys[randrange(size)]
+
+
+# Your RandomizedSet object will be instantiated and called as such:
+# obj = RandomizedSet()
+# param_1 = obj.insert(val)
+# param_2 = obj.remove(val)
+# param_3 = obj.getRandom()
