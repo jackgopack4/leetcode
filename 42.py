@@ -1,26 +1,24 @@
 # 42. Trapping Rain Water
-class Solution(object):
-    def trap(self, height):
-        """
-        :type height: List[int]
-        :rtype: int
-        """
-        length = len(height)
-        leftMax = [0]*length
-        rightMax = [0]*length
+class Solution:
+    def trap(self, height: List[int]) -> int:
+        # idea - go from L to R, measuring max based on left height
+        # left pass
+        if len(height) <= 2:
+            return 0
+        maxHeight = 0
+        maxHeld = [0]*len(height)
+        for i in range(0,len(height)):
+            if height[i] < maxHeight:
+                maxHeld[i] = maxHeight-height[i]
+            else:
+                maxHeight = height[i]
 
-        for i in range(length):
-            if (i-1) >= 0:
-                if height[i-1] > leftMax[i] and height[i-1]>leftMax[i-1]:
-                    leftMax[i] = height[i-1]
-                else:
-                    leftMax[i] = leftMax[i-1]
-        for i in range(length-1,-1,-1):
-            if (i+1) <= length-1:
-                if height[i+1] > rightMax[i] and height[i+1] > rightMax[i+1]:
-                    rightMax[i] = height[i+1]
-                else:
-                    rightMax[i] = rightMax[i+1]
-        maxIndices = [min(i) for i in zip(leftMax,rightMax)]
-        res = sum([i[1]-i[0] for i in zip(height,maxIndices) if i[1]>i[0]])
-        return res
+        maxHeight = 0
+        for i in range(len(height)-1,-1,-1):
+            if height[i] < maxHeight:
+                maxHeld[i] = min(maxHeight-height[i],maxHeld[i])
+            else:
+                maxHeight = height[i]
+                maxHeld[i] = 0
+
+        return sum(maxHeld)
