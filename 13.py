@@ -1,41 +1,14 @@
 # 13. Roman to Integer
-class Solution(object):
-    def __init__(self):
-        self.values= {
-            "M": 1000,
-            "D": 500,
-            "C": 100,
-            "L": 50,
-            "X": 10,
-            "V": 5,
-            "I": 1
-        }
-        self.prefixes = {
-            "I": ["V","X"],
-            "X": ["L","C"],
-            "C": ["D","M"]
-        }
-    def romanToInt(self, s):
-        """
-        :type s: str
-        :rtype: int
-        """
-        tmp = 0
-        # handle case of one char
-        if len(s) == 1:
-            return self.values.get(s)
-        else:
-            skip = False
-            for i in range(len(s)):
-                if skip:
-                    skip = False
-                    continue
-                if s[i] in self.prefixes and \
-                    i+1<len(s) and \
-                    s[i+1] in self.prefixes.get(s[i]): 
-                    tmp+=(self.values.get(s[i+1])-self.values.get(s[i]))
-                    skip = True
-                else:
-                    tmp+=self.values.get(s[i])
-        return tmp
-
+class Solution:
+    def romanToInt(self, s: str) -> int:
+        mappings = {'I':1, 'IV':4, 'V':5, 'IX':9,'X':10,'XL':40,'L':50,'XC':90,'C':100,'CD':400,'D':500,'CM':900,'M':1000}
+        total = 0
+        idx = 0
+        while idx < len(s):
+            if idx < len(s)-1 and s[idx:idx+2] in mappings:
+                total += mappings[s[idx:idx+2]]
+                idx += 2
+            else:
+                total += mappings[s[idx]]
+                idx += 1
+        return total
