@@ -1,24 +1,60 @@
 class Solution:
+    def check_victory(self,board:List[List[str]], player:str, move:List[int]) -> bool:
+        # check horizontal victory
+        player_wins = True
+        row = move[0]
+        for position in board[row]:
+            if position != player:
+                player_wins = False
+                break
+        if player_wins:
+            return True
+        # check vertical victory
+        player_wins = True
+        col = move[1]
+        for row in range(3):
+            if board[row][col] != player:
+                player_wins = False
+                break
+        if player_wins:
+            return True
+        # check left to right diagonal victory
+        if move[0] == move[1] or abs(move[0] - move[1]) == 2:
+            player_wins = True
+            for col_row in range(3):
+                if board[col_row][col_row] != player:
+                    player_wins = False
+                    break
+            if player_wins:
+                return True
+            player_wins = True
+            for row in range(3):
+                col = 2-row
+                if board[row][col] != player:
+                    player_wins = False
+                    break
+            if player_wins:
+                return True
+        return False
+        
     def tictactoe(self, moves: List[List[int]]) -> str:
-        aMoves = [x for ind, x in enumerate(moves) if ind % 2 == 0]
-        bMoves = [x for ind, x in enumerate(moves) if ind % 2 == 1]
-        aXMoves = [x[0] for ind, x in enumerate(moves) if ind % 2 == 0]
-        aYMoves = [x[1] for ind, x in enumerate(moves) if ind % 2 == 0]
-        bXMoves = [x[0] for ind, x in enumerate(moves) if ind % 2 == 1]
-        bYMoves = [x[1] for ind, x in enumerate(moves) if ind % 2 == 1]
-        #print(aMoves)
-        #print(bMoves)
-        if aXMoves.count(0) == 3 or aXMoves.count(1) == 3 or aXMoves.count(2) == 3 or aYMoves.count(0) == 3 or aYMoves.count(1) == 3 or aYMoves.count(2) == 3:
-            return "A"
-        elif bXMoves.count(0) == 3 or bXMoves.count(1) == 3 or bXMoves.count(2) == 3 or bYMoves.count(0) == 3 or bYMoves.count(1) == 3 or bYMoves.count(2) == 3:
-            return "B"
-        elif [1,1] in aMoves and ([0,0] in aMoves and [2,2] in aMoves or \
-            [0,2] in aMoves and [2,0] in aMoves):
-            return "A"
-        elif [1,1] in bMoves and ([0,0] in bMoves and [2,2] in bMoves or \
-            [0,2] in bMoves and [2,0] in bMoves):
-            return "B"
-        elif len(moves) < 9:
-            return "Pending"
-        else:
+        # current_move: set to 'A' or 'B' to indicate who is moving
+        player = 'A'
+        game_over = False
+        current_move_index = 0
+        board = [[""] * 3 for _ in range(3)]
+
+        while not game_over and current_move_index < len(moves):
+            move_to_place = moves[current_move_index]
+            board[move_to_place[0]][move_to_place[1]] = player
+            if self.check_victory(board,player,move_to_place):
+                return player
+            if player == 'A':
+                player = 'B'
+            else:
+                player = 'A'
+            current_move_index += 1
+        if len(moves) == 9:
             return "Draw"
+        else:
+            return "Pending"
