@@ -1,28 +1,10 @@
-import "slices"
 func twoSum(nums []int, target int) []int {
-    sortedNums := make([]int, len(nums))
-    copy(sortedNums, nums)
-    // sort then two pointer approach
-    slices.Sort(sortedNums)
-    lp, rp := 0, len(nums)-1
-    for {
-        tmp := sortedNums[lp] + sortedNums[rp]
-        if tmp == target {
-            res := []int{}
-            for i, v := range nums {
-                if v == sortedNums[lp] || v == sortedNums[rp] {
-                    res = append(res, i)
-                }
-            }
-            return res
+    tmp := make(map[int]int)
+    for idx1, n := range nums {
+        if idx2, ok := tmp[target - n]; ok {
+            return []int{idx1, idx2}
         }
-        if tmp < target {
-            lp += 1
-        } else {
-            rp -= 1
-        }
-        if lp >= rp {
-            panic("cannot happen, provide a valid nums/target combo")
-        }
+        tmp[n] = idx1
     }
+    return []int{0,0}
 }
